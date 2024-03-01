@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -83,48 +82,50 @@ void mostrarInstrucciones() {
 void iniciarJuego() {
     srand(time(0));
 
-    vector<Jugador> jugadores(2);
+    Jugador jugador1, jugador2;
 
     cout << "¡Bienvenidos al juego de combate de peleas con poderes y turnos!" << endl;
     mostrarInstrucciones();
     cout << endl;
 
-    for (int i = 0; i < 2; ++i) {
-        cout << "Jugador " << i+1 << ", por favor ingrese su nombre: ";
-        cin >> jugadores[i].nombre;
-        jugadores[i].vida = 100;
-    }
+    cout << "Jugador 1, por favor ingrese su nombre: ";
+    cin >> jugador1.nombre;
+    jugador1.vida = 100;
+
+    cout << "Jugador 2, por favor ingrese su nombre: ";
+    cin >> jugador2.nombre;
+    jugador2.vida = 100;
 
     int turno = 0;
 
-    while (jugadores[0].vida > 0 && jugadores[1].vida > 0) {
+    while (jugador1.vida > 0 && jugador2.vida > 0) {
         turno++;
         cout << "Turno " << turno << endl;
 
-        turnoJugador(jugadores[0], jugadores[1]);
+        turnoJugador(jugador1, jugador2);
 
-        if (jugadores[1].vida <= 0) {
-            cout << jugadores[0].nombre << " ¡Has derrotado a " << jugadores[1].nombre << "! ¡Ganaste la batalla!" << endl;
+        if (jugador2.vida <= 0) {
+            cout << jugador1.nombre << " ¡Has derrotado a " << jugador2.nombre << "! ¡Ganaste la batalla!" << endl;
             break;
         }
 
-        cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
-        cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+        cout << jugador1.nombre << ": " << jugador1.vida << " puntos de vida." << endl;
+        cout << jugador2.nombre << ": " << jugador2.vida << " puntos de vida." << endl;
 
-        turnoJugador(jugadores[1], jugadores[0]);
+        turnoJugador(jugador2, jugador1);
 
-        if (jugadores[0].vida <= 0) {
-            cout << jugadores[1].nombre << " ¡Has derrotado a " << jugadores[0].nombre << "! ¡Ganaste la batalla!" << endl;
+        if (jugador1.vida <= 0) {
+            cout << jugador2.nombre << " ¡Has derrotado a " << jugador1.nombre << "! ¡Ganaste la batalla!" << endl;
             break;
         }
 
-        cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
-        cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+        cout << jugador1.nombre << ": " << jugador1.vida << " puntos de vida." << endl;
+        cout << jugador2.nombre << ": " << jugador2.vida << " puntos de vida." << endl;
     }
 
     cout << "Fin del juego." << endl;
-    cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
-    cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+    cout << jugador1.nombre << ": " << jugador1.vida << " puntos de vida." << endl;
+    cout << jugador2.nombre << ": " << jugador2.vida << " puntos de vida." << endl;
 }
 
 int main() {
