@@ -1,0 +1,164 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct Jugador {
+    string nombre;
+    int vida;
+};
+
+int generarNumeroAleatorio(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
+
+void turnoJugador(Jugador &atacante, Jugador &defensor) { 
+    int opcion;
+    cout << atacante.nombre << ", es tu turno. Elige tu acción:" << endl;
+    cout << "1. Atacar" << endl;
+    cout << "2. Defender" << endl;
+    cout << "3. Lanzar poder especial" << endl;
+    cout << "4. Curar" << endl;
+    cout << "5. Multiplicar ataque" << endl;
+    cin >> opcion;
+
+    int ataque = 0;
+
+    switch (opcion) {
+        case 1:
+            cout << atacante.nombre << " ¡Has atacado a " << defensor.nombre << "!" << endl;
+            ataque = generarNumeroAleatorio(10, 20);
+            defensor.vida -= ataque;
+            break;
+        case 2:
+            cout << atacante.nombre << " Te has defendido." << endl;
+            ataque = generarNumeroAleatorio(5, 10);
+            atacante.vida -= ataque;
+            break;
+        case 3:
+            cout << atacante.nombre << " ¡Has lanzado un poder especial a " << defensor.nombre << "!" << endl;
+            opcion = generarNumeroAleatorio(1, 3);
+            switch (opcion) {
+                case 1: // Poder especial: Inmovilizar
+                    cout << defensor.nombre << " ¡Te has vuelto inmovil!" << endl;
+                    defensor.vida -= 10;
+                    break;
+                case 2: // Poder especial: Robar vida
+                    cout << defensor.nombre << " ¡Has robado vida a " << atacante.nombre << "!" << endl;
+                    atacante.vida -= 20;
+                    defensor.vida += 20;
+                    break;
+                case 3: // Poder especial: Confusión
+                    cout << defensor.nombre << " ¡Estás confundido y atacaste a ti mismo!" << endl;
+                    defensor.vida -= ataque;
+                    break;
+            }
+            break;
+        case 4:
+            cout << atacante.nombre << " ¡Te has curado!" << endl;
+            atacante.vida += 20;
+            break;
+        case 5:
+            cout << atacante.nombre << " ¡Has multiplicado tu ataque!" << endl;
+            ataque = generarNumeroAleatorio(20, 40);
+            defensor.vida -= ataque;
+            break;
+        default:
+            cout << "Opción inválida. Pierdes el turno." << endl;
+            break;
+    }
+}
+
+void mostrarInstrucciones() {
+    cout << "---- Instrucciones ----" << endl;
+    cout << "- Cada jugador tiene 100 puntos de vida." << endl;
+    cout << "- En cada turno, cada jugador puede elegir entre atacar, defender o usar un poder especial." << endl;
+    cout << "- El juego termina cuando uno de los jugadores se queda sin puntos de vida." << endl;
+    cout << "- ¡Diviértanse jugando!" << endl;
+}
+
+void iniciarJuego() {
+    srand(time(0));
+
+    vector<Jugador> jugadores(2);
+
+    cout << "¡Bienvenidos al juego de combate de peleas con poderes y turnos!" << endl;
+    mostrarInstrucciones();
+    cout << endl;
+
+    for (int i = 0; i < 2; ++i) {
+        cout << "Jugador " << i+1 << ", por favor ingrese su nombre: ";
+        cin >> jugadores[i].nombre;
+        jugadores[i].vida = 100;
+    }
+
+    int turno = 0;
+
+    while (jugadores[0].vida > 0 && jugadores[1].vida > 0) {
+        turno++;
+        cout << "Turno " << turno << endl;
+
+        turnoJugador(jugadores[0], jugadores[1]);
+
+        if (jugadores[1].vida <= 0) {
+            cout << jugadores[0].nombre << " ¡Has derrotado a " << jugadores[1].nombre << "! ¡Ganaste la batalla!" << endl;
+            break;
+        }
+
+        cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
+        cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+
+        turnoJugador(jugadores[1], jugadores[0]);
+
+        if (jugadores[0].vida <= 0) {
+            cout << jugadores[1].nombre << " ¡Has derrotado a " << jugadores[0].nombre << "! ¡Ganaste la batalla!" << endl;
+            break;
+        }
+
+        cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
+        cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+    }
+
+    cout << "Fin del juego." << endl;
+    cout << jugadores[0].nombre << ": " << jugadores[0].vida << " puntos de vida." << endl;
+    cout << jugadores[1].nombre << ": " << jugadores[1].vida << " puntos de vida." << endl;
+}
+
+int main() {
+    int opcion;
+    bool salir = false;
+
+    while (!salir) {
+        cout << "---- Menu ----" << endl;
+        cout << "1. Ver instrucciones" << endl;
+        cout << "2. Iniciar juego" << endl;
+        cout << "3. Salir" << endl;
+        cout << "4. Creditos" << endl;
+        cout << "Ingrese su opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                mostrarInstrucciones();
+                break;
+            case 2:
+                iniciarJuego();
+                break;
+            case 3:
+                salir = true;
+                break;
+            case 4:
+                cout << "Créditos:\nElaborado por: Christian Ayala, Jhonn Saeteros\nProgramación I\nAño de lanzamiento: 2024\nTítulo: Juego de peleas por turnos."<<endl;
+                break;
+            default:
+                cout << "Opción inválida. Por favor ingrese una opción válida." << endl;
+                break;
+        }
+    }
+
+    cout << "Gracias por jugar el juego de Christian Ayala y Jhonn Saeteros.\n¡Hasta luego!" << endl;
+    return 0;
+}
